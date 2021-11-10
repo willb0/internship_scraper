@@ -16,18 +16,22 @@ headers = {
         'Upgrade-Insecure-Requests': '1'
     }
 
-def scrape(links,jobs):
-    data = {}
+def scrape(links:list,jobs:list,date_posted:str,num_jobs:int)-> list:
+    
+    ## initialize requests session 
+    data = []
     s = requests.session()
+    ## iterate thr    
     for link in links:
         for job in jobs:
             url = 'https://www.google.com/search?q='
             kwds = '+'.join(job.split())
-            r = s.get(f'{url}site%3A{link}+{kwds}')
+            r = s.get(f'{url}after%3A{date_posted}+site%3A{link}+{kwds}&num={num_jobs}')
             #print(r.content)
             soup = BeautifulSoup(r.text,'html.parser')
             links = [wrap.parent["href"] for wrap in soup.find_all('h3')]
             links = [link.split('&')[0].split('=')[1] for link in links]
-            data.update(links)
-    return data
-scrape(links,jobs)
+            data.extend(links)
+    return list(set(data))
+
+print(scrape(links,jobs,'2021-10-03',20))
