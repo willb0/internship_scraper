@@ -2,7 +2,7 @@ from googleapiclient.discovery import build
 import json
 num_page = 5
 
-creds = json.load(open('creds.json'))[0]
+creds = json.load(open('../creds.json'))[0]
 cse_id = creds['cse_id']
 api_key = creds['api_key']
 
